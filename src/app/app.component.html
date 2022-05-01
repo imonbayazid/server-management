@@ -1,0 +1,90 @@
+<h1 class="app-title">Server Management:</h1>
+<div class="main-body">
+  <div class="table-body">
+    <nz-table class="main-table" #basicTable [nzData]="listOfData" [nzShowPagination]="true">
+      <thead >
+        <tr>
+          <th>IP</th>
+          <th>Name</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th>Check</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody >
+        <tr *ngFor="let data of basicTable.data">
+          <td>{{ data.serverIpAddress }}</td>
+          <td>{{ data.serverName }}</td>
+          <td>{{ data.serverLocation }}</td>
+          <td>{{ data.serverStatus }}</td>
+          <td>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a>Ping</a>
+          </td>
+          <td>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a>Delete</a>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+    
+    <button class="add-btn" nz-button nzType="primary" (click)="showAddServerModal()">
+      <span>Add new server</span>
+    </button>
+  </div>
+</div>
+
+
+
+<nz-modal [(nzVisible)]="isVisible" nzTitle="Add a new server:" (nzOnCancel)="cancelModal()">
+  <div *nzModalContent>
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="addSerever()">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzRequired nzFor="serverIpAddress">IP</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="provide server IP Address!">
+          <input id="serverIpAddress" type="text" nz-input formControlName="serverIpAddress" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="serverName">Name</nz-form-label>
+        <nz-form-control [nzSpan]="12">
+          <input id="serverName" type="text" nz-input formControlName="serverName" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="serverLocation">Location</nz-form-label>
+        <nz-form-control [nzSpan]="12" >
+          <input id="serverLocation" type="text" nz-input formControlName="serverLocation" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="serverStatus" nzRequired>Server status</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="Please select server status!">
+          <nz-select
+            id="serverStatus"
+            formControlName="serverStatus"
+            nzPlaceHolder="Select an option "
+            (ngModelChange)="serverStatusChange($event)"
+          >
+            <nz-option nzValue="SERVER_UP" nzLabel="SERVER_UP"></nz-option>
+            <nz-option nzValue="SERVER_DOWN" nzLabel="SERVER_DOWN"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control [nzSpan]="12" [nzOffset]="5" >
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+
+
+  </div>
+  <div *nzModalFooter>
+    <button nz-button nzType="primary" (click)="addSerever()" [nzLoading]="isConfirmLoading">Add server</button>
+  </div>
+</nz-modal>

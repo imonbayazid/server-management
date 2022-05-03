@@ -1,7 +1,7 @@
 <h1 class="app-title">Server Management:</h1>
 <div class="main-body">
   <div class="table-body">
-    <nz-table class="main-table" #basicTable [nzData]="listOfData" [nzShowPagination]="true">
+    <nz-table class="main-table" #basicTable [nzData]="listOfServer" [nzShowPagination]="true">
       <thead >
         <tr>
           <th>IP</th>
@@ -17,14 +17,16 @@
           <td>{{ data.serverIpAddress }}</td>
           <td>{{ data.serverName }}</td>
           <td>{{ data.serverLocation }}</td>
-          <td>{{ data.serverStatus }}</td>
-          <td>
-            <nz-divider nzType="vertical"></nz-divider>
-            <a>Ping</a>
+          <td><nz-tag class="supdown-clm-width" [nzColor]="data.serverStatus==='SERVER_UP'?'#87d068':'#f50'">{{ data.serverStatus }}</nz-tag>
+
           </td>
           <td>
             <nz-divider nzType="vertical"></nz-divider>
-            <a>Delete</a>
+            <a (click)="pingServer(data.serverIpAddress)">Ping</a>
+          </td>
+          <td>
+            <nz-divider nzType="vertical"></nz-divider>
+            <a (click)="deleteServer(data.id)">Delete</a>
           </td>
         </tr>
       </tbody>

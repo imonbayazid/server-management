@@ -1,3 +1,4 @@
+import { AppService } from './app.service';
 import { ServerModel } from './interface/server-model';
 import { ServerStatus } from './enum/server-status.enum';
 import { Component, OnInit } from '@angular/core';
@@ -13,10 +14,10 @@ export class AppComponent implements OnInit{
   title = 'server-manager';
   isVisible = false;
   isConfirmLoading = false;
-
+  listOfServer: ServerModel [] =[] ;
   validateForm!: FormGroup;
   
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private appService:AppService) {}
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
@@ -25,9 +26,16 @@ export class AppComponent implements OnInit{
       serverLocation: [null],
       serverStatus: [null, [Validators.required]]
     });
-  }
 
-  listOfData: ServerModel[] = [
+    this.appService.getAllServer().subscribe(
+      data => {
+        this.listOfServer = data;
+        console.log(data)
+      }
+    );
+    }
+
+    /* listOfData: ServerModel[] = [
     {
       id: 1,
       serverIpAddress: 'John Brown',
@@ -56,7 +64,8 @@ export class AppComponent implements OnInit{
       serverLocation: 'New York No. 1 Lake Park',
       serverStatus: ServerStatus.SERVER_UP 
     }
-  ];
+  ]; 
+  */
 
   showAddServerModal(){
     this.isVisible = true;
@@ -65,9 +74,14 @@ export class AppComponent implements OnInit{
   addSerever(){
     this.isVisible = false;
     this.isConfirmLoading = false;
-    console.log('submit', this.validateForm.value);
+    //console.log('submit', this.validateForm.value);
     if (this.validateForm.valid) {
       console.log('submit', this.validateForm.value);
+      this.appService.addServer(this.validateForm.value)
+      .subscribe(res=>{
+        console.log(res);
+        this.listOfServer = [... this.listOfServer,this.validateForm.value]
+      });
     } else {
       Object.values(this.validateForm.controls).forEach(control => {
         if (control.invalid) {
@@ -86,6 +100,24 @@ export class AppComponent implements OnInit{
 
   }
 
+  deleteServer(id: number): void{
+    this.appService.deleteServer(id)
+    .subscribe(res=>{
+       console.log(res);
+    });
+  }
+
+  pingServer(ip: String): void{
+    console.log(ip);
+    this.appService.pingServer(ip)
+    .subscribe(res=>{
+      console.log(res);
+      this.listOfServer.map(server =>{ 
+        server.serverStatus = res.serverIpAddress === server.serverIpAddress ? res.serverStatus : server.serverStatus;
+      });
+      this.listOfServer = [...this.listOfServer];
+    });
+  }
   serverStatusChange(value: string): void {
     //this.validateForm.get('note')!.setValue(value === 'male' ? 'Hi, man!' : 'Hi, lady!');
   }

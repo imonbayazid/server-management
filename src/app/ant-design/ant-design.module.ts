@@ -79,7 +79,8 @@ import { NzResizableModule } from 'ng-zorro-antd/resizable';
     NzDropDownModule,
     NzInputModule,
     NzInputNumberModule,
-    NzSelectModule 
+    NzSelectModule,
+    NzTagModule  
   ]
 })
 export class AntDesignModule { }

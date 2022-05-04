@@ -13,7 +13,7 @@ export class AppService {
 
   constructor(private http: HttpClient) { }
 
-  private  readonly BACKEND_BASE_URL= "http://192.168.99.100:9090";
+  private  readonly BACKEND_BASE_URL= "http://ec2-54-237-201-143.compute-1.amazonaws.com:9090";
  
   addServer(server: ServerModel):Observable<ServerModel>{
     return this.http.post<ServerModel>(`${this.BACKEND_BASE_URL}/addserver`, server)
